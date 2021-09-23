@@ -7,5 +7,5 @@ setup(
     author='CookieUzen',
     author_email='uzen.huang@gmail.com',
     package=['ibbycal'],
-    install_requires=['ics'],
+    install_requires=['ics', 'arrow'],
 )
