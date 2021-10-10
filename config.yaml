@@ -13,4 +13,5 @@ classes:
     teacher: 'platt'
 
 timetable:
-  day1: ['english', 'math']
+  - ['english', 'math', 'english', 'math']
+  - ['math', 'math', 'math', 'math']
