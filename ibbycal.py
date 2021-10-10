@@ -3,6 +3,7 @@
 from ics import Calendar, Event
 import yaml
 import sys, getopt
+import datetime
 
 
 class classes:
@@ -15,13 +16,17 @@ class classes:
 def usage():
     print("""Usage: ibbycal [OPTION]
                -h, --help   show help
-               -d, --cycle  cycle for first day of this week""")
+               -c, --cycle  cycle for first day this week
+               -y, --year   year of first day this week
+               -m, --month  month of first day this week
+               -d, --day    day of first day this week
+               """)
 
 
 def main(argv):
     # Parsing arguements
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hd:", ["help", "cycle="])
+        opts, args = getopt.getopt(sys.argv[1:], "hc:y:m:d:", ["help", "cycle=", "year=", "month=", "day="])
     except getopt.GetoptError as err:
         # print help information and exit:
         print(err)
@@ -31,8 +36,15 @@ def main(argv):
     for opts, args in opts:
         if opts in ("-h", "--help"):
             usage()
-        elif opts in ("-d", "--cycle"):
+            sys.exit(0)
+        elif opts in ("-c", "--cycle"):
             cycle = int(args)
+        elif opts in ("-y", "--year"):
+            year = int(args)
+        elif opts in ("-m", "--month"):
+            month = int(args)
+        elif opts in ("-d", "--day"):
+            date = int(args)
 
     # Reading config file
     with open('config.yaml') as foo:
@@ -56,13 +68,35 @@ def main(argv):
     try:
         cycle
     except NameError:
-        print("Require cycle option")
-        usage()
+        print("default cycle to 1")
+        cycle = 1
+
+    try:
+        year
+    except NameError:
+        print("default to this year")
+        year = datetime.datetime.now().strftime("%Y")
+
+    try:
+        month
+    except NameError:
+        print("default to this month")
+        month = datetime.datetime.now().strftime("%m")
+
+    try:
+        date
+    except NameError:
+        print("default to today")
+        date = datetime.datetime.now().strftime("%d")
+
+    if cycle > len(timetable):
+        print("cycle is bigger than timetable! Try again.")
         sys.exit(2)
-    else:
-        if cycle > len(timetable):
-            print("cycle is bigger than timetable! Try again.")
-            sys.exit(2)
+    cycle = cycle - 1
+
+    year = str(year)
+    month = str(month)
+    date = int(date)
 
     # Begin is an arrow object
     classTimes = ["08:25:00", "10:00:00", "11:25:00", "14:05:00"]
@@ -71,16 +105,16 @@ def main(argv):
 
     c = Calendar()
     week = list()
-    startDate = 10      # temporary work around until time package
+    day = 10      # temporary work around until time package
     cyclecount = len(timetable)
 
     for i in range(5):  # A week
         day = list()
         for j in range(len(timetable[0])):
-            day.append(Event(name=dictofclass[timetable[i%cyclecount][j]].name,
-                begin='2021-10-'+str(startDate+i)+' '+classTimes[j]+'+08:00',
+            day.append(Event(name=dictofclass[timetable[(i+cycle)%cyclecount][j]].name,
+                             begin=year+"-"+month+"-"+str(date+i)+" "+classTimes[j]+"+08:00",
                              duration=classDuration,
-                             location=dictofclass[timetable[i%cyclecount][j]].classroom))
+                             location=dictofclass[timetable[(i+cycle)%cyclecount][j]].classroom))
         week.append(day)
 
     # Adding calendar objects for each day
