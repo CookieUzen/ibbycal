@@ -36,6 +36,10 @@ classes:
     classroom: "A417"
     teacher: "Fiona Belfakih"
   -
+    name: "EE"
+    classroom: "A315"
+    teacher: "Xuejie Wang"
+  -
     name: "Free"
     classroom: "Library"
     teacher: ""
