@@ -7,6 +7,7 @@ classTimes = ["08:25:00", "10:00:00", "11:25:00", "14:05:00"]
 # May be set to anything that timedelta() understands/May be set with a dict
 classDuration = {"hours": 1, "minutes": 20}
 
+
 class Class:
     name = ""
     room = ""
