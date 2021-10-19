@@ -7,3 +7,4 @@ _An IB compatible, 8 (modifiable) day cycle calendar written in python._
 - optional config matching
 - add config generation script
 - holiday avoider
+- weekeday input/configuration
