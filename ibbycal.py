@@ -94,8 +94,8 @@ def main(argv):
         sys.exit(2)
     cycle = cycle - 1
 
-    year = str(year)
-    month = str(month)
+    year = str(int(year))
+    month = str(int(month))
     date = int(date)
 
     # Begin is an arrow object
