@@ -47,8 +47,11 @@ def main(argv):
             date = int(args)
 
     # Reading config file
-    with open('config.yaml') as foo:
-        data = yaml.safe_load(foo)
+    try:
+        with open('config.yaml') as foo:
+            data = yaml.safe_load(foo)
+    except FileNotFoundError as err:
+        print("config not found, exiting")
 
     # Creating a dictionary of classes from config.yaml
     dictofclass = {}
@@ -68,30 +71,44 @@ def main(argv):
     try:
         cycle
     except NameError:
-        print("default cycle to 1")
-        cycle = 1
+        print("What's the cycle?: ", end="")
+        cycle = int(args)
 
     try:
         year
     except NameError:
-        print("default to this year")
-        year = datetime.datetime.now().strftime("%Y")
+        print("year (enter t for this year): ", end="")
+
+        read = input()
+        if read == "t":
+            year = datetime.datetime.now().strftime("%Y")
+        else:
+            year = int(read)
 
     try:
         month
     except NameError:
-        print("default to this month")
-        month = datetime.datetime.now().strftime("%m")
+        print("month (enter t for this month): ", end="")
+        read = input()
+        if read == "t":
+            month = datetime.datetime.now().strftime("%m")
+        else:
+            month = int(read)
 
     try:
         date
     except NameError:
-        print("default to today")
-        date = datetime.datetime.now().strftime("%d")
+        print("day (enter t for today): ")
+        if read == "t":
+            date = datetime.datetime.now().strftime("%d")
+        else:
+            date = int(read)
 
     if cycle > len(timetable):
         print("cycle is bigger than timetable! Try again.")
         sys.exit(2)
+
+    # recenter cycle so it matches array
     cycle = cycle - 1
 
     year = str(int(year))
