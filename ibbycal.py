@@ -72,15 +72,27 @@ def main(argv):
         cycle
     except NameError:
         print("What's the cycle?: ", end="")
-        cycle = int(args)
+        cycle = int()
+        while True:
+            cycle = input()
+
+            if cycle == "":
+                print("Empty value, try again: ", end="")
+                continue
+
+            if int(cycle) > len(timetable):
+                print("cycle is bigger than timetable, try again: ", end="")
+                continue
+
+            break
+
+        cycle = int(cycle)
 
     try:
         year
     except NameError:
-        print("year (enter t for this year): ", end="")
-
-        read = input()
-        if read == "t":
+        print("year (press return for this year): ", end="")
+        if (read := input()) == "":
             year = datetime.datetime.now().strftime("%Y")
         else:
             year = int(read)
@@ -88,9 +100,8 @@ def main(argv):
     try:
         month
     except NameError:
-        print("month (enter t for this month): ", end="")
-        read = input()
-        if read == "t":
+        print("month (press return for this month): ", end="")
+        if (read := input()) == "":
             month = datetime.datetime.now().strftime("%m")
         else:
             month = int(read)
@@ -98,15 +109,11 @@ def main(argv):
     try:
         date
     except NameError:
-        print("day (enter t for today): ")
-        if read == "t":
+        print("day (press return for today): ", end="")
+        if (read := input()) == "":
             date = datetime.datetime.now().strftime("%d")
         else:
             date = int(read)
-
-    if cycle > len(timetable):
-        print("cycle is bigger than timetable! Try again.")
-        sys.exit(2)
 
     # recenter cycle so it matches array
     cycle = cycle - 1

@@ -7,9 +7,13 @@ import yaml
 def addClass():
     """add classess"""
     classes = list()
+    print("Adding classes to database")
     while True:
         print("Enter class name: ", end="")
         className = input()
+        if className == "":
+            print("Cannot input empty classname, try again.\n")
+            continue
 
         print("Enter classroom: ", end="")
         classRoom = input()
@@ -32,7 +36,8 @@ def addTimetable():
     """add timetable"""
     timetable = list()
 
-    print("Input classes, with a comma seperating each class. Class name have to the ones entered above.")
+    print("Adding the classes for each day")
+    print("Use a comma seperating each class. Class name have to the ones entered above.")
     while True:
         read = input().split(",")
         strippedRead = [ i.strip() for i in read ]
