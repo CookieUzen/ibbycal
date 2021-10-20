@@ -40,8 +40,8 @@ classes:
     classroom: "A315"
     teacher: "Xuejie Wang"
   -
-    name: "Free"
-    classroom: "Library"
+    name: "Free"  # If class name is Free or free, program will skip the class
+    classroom: ""
     teacher: ""
 
 timetable:

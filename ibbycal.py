@@ -129,12 +129,15 @@ def main(argv):
 
     c = Calendar()
     week = list()
-    day = 10      # temporary work around until time package
     cyclecount = len(timetable)
 
     for i in range(5):  # A week
         day = list()
         for j in range(len(timetable[0])):
+            # skip class if free session
+            if dictofclass[timetable[(i+cycle)%cyclecount][j]].name in ("free","Free"):
+                continue
+                
             day.append(Event(name=dictofclass[timetable[(i+cycle)%cyclecount][j]].name,
                              begin=year+"-"+month+"-"+str(date+i)+" "+classTimes[j]+"+08:00",
                              duration=classDuration,
