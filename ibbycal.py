@@ -187,7 +187,7 @@ def main(argv):
         currentCycle = (dayCount+cycle)%cyclecount
         for j in range(len(timetable[currentCycle])):
             # skip class if free session
-            if dictofclass[timetable[currentCycle][j]].name in ("free", "Free"):
+            if timetable[currentCycle][j] in ("free", "Free"):
                 continue
                 
             day.append(Event(name=dictofclass[timetable[currentCycle][j]].name,

@@ -50,6 +50,7 @@ def addTimetable():
 
     print("Adding the classes for each day")
     print("Use a comma seperating each class. Class name have to the ones entered above.")
+    print("Enter free for an empty class")
     while True:
         read = input().split(",")
         strippedRead = [ i.strip() for i in read ]
