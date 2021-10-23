@@ -3,8 +3,7 @@
 _An IB compatible, 8 (modifiable) day cycle calendar written in python._
 
 ## TODO
-- multiple weeks
-- optional config matching
-- add config generation script
-- holiday avoider
-- weekeday input/configuration
+- [x] multiple weeks
+- [x] add config generation script
+- [ ] holiday avoider (read ics containing holidays)
+- [x] weekeday input/configuration
