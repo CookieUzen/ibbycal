@@ -22,13 +22,14 @@ def usage():
                -m, --month      month of first day this week
                -d, --day        day of first day this week
                -a, --duration   how many days to generate
+               -n, --no-day     do not generate cycle count event
                """)
 
 
 def main(argv):
     # Parsing arguements
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hc:y:m:d:a:", ["help", "cycle=", "year=", "month=", "day=", "duration="])
+        opts, args = getopt.getopt(sys.argv[1:], "hc:y:m:d:a:n", ["help", "cycle=", "year=", "month=", "day=", "duration=", "no-day"])
     except getopt.GetoptError as err:
         # print help information and exit:
         print(err)
@@ -49,6 +50,9 @@ def main(argv):
             date = int(args)
         elif opts in ("-a", "--duration"):
             duration = int(args)
+        elif opts in ("-n", "--no-day"):
+            noDay = True
+
 
     # Reading config file
     try:
@@ -74,6 +78,11 @@ def main(argv):
         weekend.append(i)
     
     # Sanity checking
+    try:
+        noDay
+    except NameError:
+        noDay = False
+
     try:
         cycle
     except NameError:
@@ -174,8 +183,6 @@ def main(argv):
                 currentDay = currentDay % monthrange(currentYear, currentMonth)[1] + 1
                 currentMonth += 1
 
-        print(currentDay, currentMonth)
-
         day = list()
         currentCycle = (dayCount+cycle)%cyclecount
         for j in range(len(timetable[currentCycle])):
@@ -187,7 +194,12 @@ def main(argv):
                              begin=str(currentYear)+"-"+str(currentMonth)+"-"+str(currentDay)+" "+classTimes[j]+"+08:00",
                              duration=classDuration,
                              location=dictofclass[timetable[currentCycle][j]].classroom))
-        day.append(Event(name="Day "+str(currentCycle)))
+
+        # Create all day event showing Day Number
+        if noDay is not True:
+            foo = Event(name="Day "+str(currentCycle+1), begin=str(currentYear)+"-"+str(currentMonth)+"-"+str(currentDay))
+            foo.make_all_day()
+            day.append(foo)
 
         currentDay += 1
         week.append(day)
