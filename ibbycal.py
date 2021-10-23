@@ -4,6 +4,7 @@ from ics import Calendar, Event
 import yaml
 import sys, getopt
 import datetime
+from calendar import monthrange
 
 
 class classes:
@@ -15,18 +16,19 @@ class classes:
 
 def usage():
     print("""Usage: ibbycal [OPTION]
-               -h, --help   show help
-               -c, --cycle  cycle for first day this week
-               -y, --year   year of first day this week
-               -m, --month  month of first day this week
-               -d, --day    day of first day this week
+               -h, --help       show help
+               -c, --cycle      cycle for first day this week
+               -y, --year       year of first day this week
+               -m, --month      month of first day this week
+               -d, --day        day of first day this week
+               -a, --duration   how many days to generate
                """)
 
 
 def main(argv):
     # Parsing arguements
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hc:y:m:d:", ["help", "cycle=", "year=", "month=", "day="])
+        opts, args = getopt.getopt(sys.argv[1:], "hc:y:m:d:a:", ["help", "cycle=", "year=", "month=", "day=", "duration="])
     except getopt.GetoptError as err:
         # print help information and exit:
         print(err)
@@ -45,28 +47,32 @@ def main(argv):
             month = int(args)
         elif opts in ("-d", "--day"):
             date = int(args)
+        elif opts in ("-a", "--duration"):
+            duration = int(args)
 
     # Reading config file
     try:
         with open('config.yaml') as foo:
             data = yaml.safe_load(foo)
     except FileNotFoundError as err:
+        print(err)
         print("config not found, exiting")
 
     # Creating a dictionary of classes from config.yaml
     dictofclass = {}
-    for i in range(len(data['classes'])):
-        dictofclass.update({data['classes'][i]['name']:
-                            classes(data['classes'][i]['name'],
-                            data['classes'][i]['classroom'],
-                            data['classes'][i]['teacher'])})
+    for i in data['classes']:
+        dictofclass.update({i['name']: classes(i['name'], i['classroom'], i['teacher'])})
 
     # Create an array for timetable
     timetable = list()
+    for i in data['timetable']:
+        timetable.append(i)
 
-    for i in range(len(data['timetable'])):
-        timetable.append(data['timetable'][i])
-
+    # Create an array for weekend
+    weekend = list()
+    for i in data['weekend']:
+        weekend.append(i)
+    
     # Sanity checking
     try:
         cycle
@@ -115,11 +121,20 @@ def main(argv):
         else:
             date = int(read)
 
+    try:
+        duration
+    except NameError:
+        print("duration (press return for one day): ", end="")
+        if (read := input()) == "":
+            duration = 1
+        else:
+            duration = int(read)
+
     # recenter cycle so it matches array
     cycle = cycle - 1
 
-    year = str(int(year))
-    month = str(int(month))
+    year = int(year)
+    month = int(month)
     date = int(date)
 
     # Begin is an arrow object
@@ -131,23 +146,56 @@ def main(argv):
     week = list()
     cyclecount = len(timetable)
 
-    for i in range(5):  # A week
+    currentDay = date
+    currentMonth = month
+    currentYear = year
+    for dayCount in range(duration):
+        # Checking if next year
+        if currentMonth >= 12:
+            currentMonth = currentMonth % 12 + 1
+            currentYear += 1
+
+        # Checking if next month
+        if currentDay >= monthrange(currentDay, currentMonth)[1]:
+            currentDay = currentDay % monthrange(currentYear, currentMonth)[1] + 1
+            currentMonth += 1
+            
+        # Checking if weekend
+        while datetime.date(year=currentYear, month=currentMonth, day=currentDay).strftime("%A") in weekend:
+            currentDay += 1
+
+            # Checking if next year
+            if currentMonth >= 12:
+                currentMonth = currentMonth % 12 + 1
+                currentYear += 1
+
+            # Checking if next month
+            if currentDay >= monthrange(currentDay, currentMonth)[1]:
+                currentDay = currentDay % monthrange(currentYear, currentMonth)[1] + 1
+                currentMonth += 1
+
+        print(currentDay, currentMonth)
+
         day = list()
-        for j in range(len(timetable[0])):
+        currentCycle = (dayCount+cycle)%cyclecount
+        for j in range(len(timetable[currentCycle])):
             # skip class if free session
-            if dictofclass[timetable[(i+cycle)%cyclecount][j]].name in ("free","Free"):
+            if dictofclass[timetable[currentCycle][j]].name in ("free", "Free"):
                 continue
                 
-            day.append(Event(name=dictofclass[timetable[(i+cycle)%cyclecount][j]].name,
-                             begin=year+"-"+month+"-"+str(date+i)+" "+classTimes[j]+"+08:00",
+            day.append(Event(name=dictofclass[timetable[currentCycle][j]].name,
+                             begin=str(currentYear)+"-"+str(currentMonth)+"-"+str(currentDay)+" "+classTimes[j]+"+08:00",
                              duration=classDuration,
-                             location=dictofclass[timetable[(i+cycle)%cyclecount][j]].classroom))
+                             location=dictofclass[timetable[currentCycle][j]].classroom))
+        day.append(Event(name="Day "+str(currentCycle)))
+
+        currentDay += 1
         week.append(day)
 
     # Adding calendar objects for each day
     for i in range(len(week)):
-        for j in range(len(day)):
-            c.events.add(week[i][j])
+        for j in week[i]:
+            c.events.add(j)
 
     with open('my.ics', 'w') as my_file:
         my_file.writelines(c)

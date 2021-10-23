@@ -2,7 +2,19 @@
 
 import yaml
 
-# print("When are your workdays? [1 2 3-7]")
+
+def addWeekend():
+    print("When are your workdays? Enter name, with comma seperating each day:")
+    while True:
+        read = input().split(",")
+
+        if read != "":
+            strippedRead = [i.strip().title() for i in read]
+            break
+
+    print()
+    return(strippedRead)
+
 
 def addClass():
     """add classess"""
@@ -52,7 +64,9 @@ def addTimetable():
     return(timetable)
 
 
-output = {'classes': addClass(), 'timetable': addTimetable()}
+output = {'classes': addClass(),
+          'timetable': addTimetable(),
+          'weekend': addWeekend()}
 
 with open('config.yaml', 'w') as file:
     yaml.dump(output, file)

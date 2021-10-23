@@ -1,0 +1,63 @@
+weekend:
+  - Saturday
+  - Sunday
+
+classes:
+  - 
+    name: "CS"
+    classroom: "A509"
+    teacher: "John Justiniano"
+  - 
+    name: "Chinese"
+    classroom: "B302"
+    teacher: "Jackie Zhou"
+  -
+    name: "Physics"
+    classroom: "B507"
+    teacher: "David Platt"
+  -
+    name: "Math"
+    classroom: "B507"
+    teacher: "David Platt"
+  -
+    name: "English"
+    classroom: "A303"
+    teacher: "James Giallombardo"
+  -
+    name: "BM"
+    classroom: "A303"
+    teacher: "Lindsay O'Sullivan"
+  -
+    name: "TOK"
+    classroom: "A314"
+    teacher: "Jaimee Allan"
+  -
+    name: "CAS"
+    classroom: "A417"
+    teacher: "Fiona Belfakih"
+  -
+    name: "EE"
+    classroom: "A315"
+    teacher: "Xuejie Wang"
+  -
+    name: "Free"  # If class name is Free or free, program will skip the class
+    classroom: ""
+    teacher: ""
+
+timetable:
+  - ["CS", "Chinese", "Physics", "Math"]
+  - ["Chinese", "TOK", "English", "BM"]
+  - ["English", "CS", "Physics", "Free"]
+  - ["BM", "Chinese", "Math", "Physics"]
+  - ["English", "TOK", "CS", "EE"]
+  - ["CAS", "Physics", "BM", "Chinese"]
+  - ["Math", "English", "Physics", "Free"]
+  - ["Math", "Chinese", "CS", "BM"]
+  - ["CS", "BM", "Physics", "Math"]
+  - ["Chinese", "TOK", "English", "BM"]
+  - ["English", "CS", "Physics", "Free"]
+  - ["BM", "Chinese", "Math", "Free"]
+  - ["English", "TOK", "CS", "Math"]
+  - ["CAS", "Physics", "BM", "Chinese"]
+  - ["Math", "English", "Physics", "BM"]
+  - ["Math", "English", "CS", "Chinese"]
