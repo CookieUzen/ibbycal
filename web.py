@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import streamlit as st
 from ics import Calendar, Event
 import yaml
