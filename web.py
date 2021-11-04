@@ -106,7 +106,7 @@ for dayCount in range(duration):
             continue
 
         day.append(Event(name=dictofclass[timetable[currentCycle][j]].name,
-                         begin=str(currentYear)+"-"+str(currentMonth)+"-"+str(currentDay)+" "+classTimes[j]+"+08:00",
+                         begin=f"{currentYear:04}-{currentMonth:02}-{currentDay:02} {classTimes[j]}+08:00",
                          duration=classDuration,
                          location=dictofclass[timetable[currentCycle][j]].classroom))
 

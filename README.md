@@ -15,3 +15,4 @@ Try the Web UI!
 - [ ] config location flag
 - [x] Web GUI
 - [ ] make into multi file, rewrite GUI/CLI
+- [ ] use datetime library
