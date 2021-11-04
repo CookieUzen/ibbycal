@@ -124,8 +124,4 @@ for i in range(len(week)):
 
 # Output file
 st.subheader("Download your file!")
-
-with open('my.ics', 'w') as my_file:
-    my_file.writelines(c)
-
-st.download_button("Download file", c)
+st.download_button("Download file", str(c))
