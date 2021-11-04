@@ -124,4 +124,4 @@ for i in range(len(week)):
 
 # Output file
 st.subheader("Download your file!")
-st.download_button("Download file", str(c))
+st.download_button("Download file", str(c), "timetables.ics", "text/Calendar")
