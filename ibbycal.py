@@ -53,7 +53,6 @@ def main(argv):
         elif opts in ("-n", "--no-day"):
             noDay = True
 
-
     # Reading config file
     try:
         with open('config.yaml') as foo:
