@@ -18,7 +18,6 @@ for i in range(numClasses):
 
 listOfNames = [classes[i]["name"] for i in range(numClasses)]
 listOfNames.append('Free')
-st.write(listOfNames)
 
 st.header('Add Timetable')
 numDays = st.number_input("Number of Days in Timetable", 1)
