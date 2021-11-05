@@ -74,29 +74,31 @@ currentDay = date
 currentMonth = month
 currentYear = year
 for dayCount in range(duration):
-    # Checking if next year
-    if currentMonth > 12:
-        currentMonth = currentMonth % 12
-        currentYear += 1
-
     # Checking if next month
     if currentDay > monthrange(currentDay, currentMonth)[1]:
         currentDay = currentDay % monthrange(currentYear, currentMonth)[1]
         currentMonth += 1
         
+    # Checking if next year
+    if currentMonth > 12:
+        currentMonth = currentMonth % 12
+        currentYear += 1
+
+    st.write(currentYear, currentMonth, currentDay)
+
     # Checking if weekend
     while datetime.date(year=currentYear, month=currentMonth, day=currentDay).strftime("%A") in weekend:
         currentDay += 1
-
-        # Checking if next year
-        if currentMonth > 12:
-            currentMonth = currentMonth % 12
-            currentYear += 1
 
         # Checking if next month
         if currentDay > monthrange(currentDay, currentMonth)[1]:
             currentDay = currentDay % monthrange(currentYear, currentMonth)[1]
             currentMonth += 1
+
+        # Checking if next year
+        if currentMonth > 12:
+            currentMonth = currentMonth % 12
+            currentYear += 1
 
     day = list()
     currentCycle = (dayCount+cycle)%cyclecount
