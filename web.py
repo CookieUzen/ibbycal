@@ -75,13 +75,13 @@ currentMonth = month
 currentYear = year
 for dayCount in range(duration):
     # Checking if next year
-    if currentMonth >= 12:
-        currentMonth = currentMonth % 12 + 1
+    if currentMonth > 12:
+        currentMonth = currentMonth % 12
         currentYear += 1
 
     # Checking if next month
-    if currentDay >= monthrange(currentDay, currentMonth)[1]:
-        currentDay = currentDay % monthrange(currentYear, currentMonth)[1] + 1
+    if currentDay > monthrange(currentDay, currentMonth)[1]:
+        currentDay = currentDay % monthrange(currentYear, currentMonth)[1]
         currentMonth += 1
         
     # Checking if weekend
@@ -89,13 +89,13 @@ for dayCount in range(duration):
         currentDay += 1
 
         # Checking if next year
-        if currentMonth >= 12:
-            currentMonth = currentMonth % 12 + 1
+        if currentMonth > 12:
+            currentMonth = currentMonth % 12
             currentYear += 1
 
         # Checking if next month
-        if currentDay >= monthrange(currentDay, currentMonth)[1]:
-            currentDay = currentDay % monthrange(currentYear, currentMonth)[1] + 1
+        if currentDay > monthrange(currentDay, currentMonth)[1]:
+            currentDay = currentDay % monthrange(currentYear, currentMonth)[1]
             currentMonth += 1
 
     day = list()
@@ -112,7 +112,7 @@ for dayCount in range(duration):
 
     # Create all day event showing Day Number
     if noDay is not True:
-        foo = Event(name="Day "+str(currentCycle+1), begin=str(currentYear)+"-"+str(currentMonth)+"-"+str(currentDay))
+        foo = Event(name="Day "+str(currentCycle+1), begin=f"{currentYear:04}-{currentMonth:02}-{currentDay:02}")
         foo.make_all_day()
         day.append(foo)
 
