@@ -84,8 +84,6 @@ for dayCount in range(duration):
         currentMonth = currentMonth % 12
         currentYear += 1
 
-    st.write(currentYear, currentMonth, currentDay)
-
     # Checking if weekend
     while datetime.date(year=currentYear, month=currentMonth, day=currentDay).strftime("%A") in weekend:
         currentDay += 1
