@@ -52,7 +52,9 @@ if numCycle < actualNumCycle:
         st.session_state.data['timetable'].pop(len(st.session_state.data['timetable'])-1)
 
 for i in range(numCycle):
-    st.session_state.data['timetable'][i] = st.multiselect("timetable for day "+str(i+1), default=st.session_state.data['timetable'][i], options=listOfNames)
+    st.write("timetable for day "+str(i+1))
+    for j in range(4):
+        st.session_state.data['timetable'][i][j] = st.selectbox("Class "+str(j+1), index=listOfNames.index(st.session_state.data['timetable'][i][j]), options=listOfNames)
 
 st.header('Additional Configurations')
 if st.checkbox("Weekends"):
