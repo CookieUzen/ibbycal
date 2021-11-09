@@ -3,7 +3,6 @@
 import streamlit as st
 from ics import Calendar, Event
 import yaml
-import sys, getopt
 import datetime
 from calendar import monthrange
 

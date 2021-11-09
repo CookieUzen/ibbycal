@@ -1,0 +1,93 @@
+weekend:
+  - Saturday
+  - Sunday
+
+classes:
+  - 
+    name: "CS"
+    classroom: "A509"
+    teacher: ""
+  - 
+    name: "Chinese Aqusition"
+    classroom: "B302"
+    teacher: ""
+  - 
+    name: "Chinese Literature"
+    classroom: "A410"
+    teacher: ""
+  -
+    name: "Physics"
+    classroom: "B507"
+    teacher: ""
+  -
+    name: "Math AA HL"
+    classroom: "B507"
+    teacher: ""
+  -
+    name: "English Literature"
+    classroom: "A303"
+    teacher: ""
+  -
+    name: "English Aqusition"
+    classroom: "A311"
+    teacher: ""
+  -
+    name: "BM"
+    classroom: "A303"
+    teacher: ""
+  -
+    name: "TOK"
+    classroom: "A314"
+    teacher: ""
+  -
+    name: "CAS"
+    classroom: "A417"
+    teacher: ""
+  -
+    name: "EE"
+    classroom: "A315"
+    teacher: ""
+  -
+    name: "Free"
+    classroom: ""
+    teacher: ""
+  - 
+    name: "Chemistry"
+    classroom: "B503"
+    teacher: ""
+  - 
+    name: "Visual Art"
+    classroom: "B501"
+    teacher: ""
+  - 
+    name: "Music"
+    classroom: "A411"
+    teacher: ""
+  - 
+    name: "Economic"
+    classroom: "A302"
+    teacher: ""
+  - 
+    name: "Psychology"
+    classroom: "A304"
+    teacher: ""
+  - 
+    name: "Biology"
+    classroom: "B501"
+    teacher: ""
+  - 
+    name: "ESS"
+    classroom: "B503"
+    teacher: ""
+  - 
+    name: "Math AA SL"
+    classroom: "A307"
+    teacher: ""
+  - 
+    name: "Math AI HL"
+    classroom: "A306"
+    teacher: ""
+  - 
+    name: "Math AI SL"
+    classroom: "B506"
+    teacher: ""

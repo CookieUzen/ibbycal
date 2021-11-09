@@ -1,0 +1,11 @@
+weekend:
+  - Saturday
+  - Sunday
+
+classes:
+  - name: ''
+    classroom: ''
+    teacher: ''
+
+timetable:
+  - ["", "", "", ""]
