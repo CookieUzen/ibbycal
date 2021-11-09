@@ -91,3 +91,6 @@ classes:
     name: "Math AI SL"
     classroom: "B506"
     teacher: ""
+
+timetable:
+  - ["", "", "", ""]

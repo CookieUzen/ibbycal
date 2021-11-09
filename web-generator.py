@@ -20,8 +20,6 @@ st.header('Add Classes')
 numClasses = len(st.session_state.data['classes'])
 numClasses = st.number_input("Number of Classes", max_value=100, min_value=1, value=numClasses)
 
-st.write(numClasses, len(st.session_state.data['classes']))
-
 if numClasses > len(st.session_state.data['classes']):
     for i in range(numClasses - len(st.session_state.data['classes'])):
         st.session_state.data['classes'].append({'name': '', 'classroom': '', 'teacher': ''})
@@ -45,14 +43,12 @@ numCycle = len(st.session_state.data['timetable'])
 numCycle = st.number_input("Number of Days in timetable", min_value=1, max_value=100, value=numCycle)
 
 actualNumCycle = len(st.session_state.data['timetable'])
-st.write(numCycle, actualNumCycle)
 
 if numCycle > actualNumCycle:
     for i in range(numCycle - actualNumCycle):
         st.session_state.data['timetable'].append(("", "", "", ""))
 if numCycle < actualNumCycle:
     for i in range(actualNumCycle - numCycle):
-        st.write(i)
         st.session_state.data['timetable'].pop(len(st.session_state.data['timetable'])-1)
 
 for i in range(numCycle):
