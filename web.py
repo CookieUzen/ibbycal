@@ -16,14 +16,15 @@ class classes:
 
 st.title('Ibbycal')
 
-st.subheader('Configuration')
+st.sidebar.subheader('Configuration')
 
 # Uploading and parsing config
-inputFile = st.file_uploader("Upload yaml config", type=['yaml', 'yml'])
+inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'])
 
 if inputFile is not None:
     data = yaml.safe_load(inputFile)
 else:
+    st.text("Upload configuration file from sidebar")
     st.stop()
 
 # Creating a dictionary of classes from config.yaml
@@ -40,7 +41,6 @@ for i in data['timetable']:
 weekend = list()
 for i in data['weekend']:
     weekend.append(i)
-
 
 st.subheader("Generate")
 

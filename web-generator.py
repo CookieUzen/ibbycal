@@ -3,15 +3,16 @@
 import streamlit as st
 import yaml
 
-st.title('Config Generator')
+st.sidebar.title('Config Generator')
 
 # Uploading and parsing config
-inputFile = st.file_uploader("Upload yaml config", type=['yaml', 'yml'])
+inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'])
 
 # Enable option to update
-if inputFile is not None and st.button("Update"):
+if inputFile is not None and st.sidebar.button("Import from file"):
     st.session_state['data'] = yaml.safe_load(inputFile)
-elif st.button("Delete") or 'data' not in st.session_state:
+
+if st.sidebar.button("Delete data") or 'data' not in st.session_state:
     with open('template.yaml') as foo:
         st.session_state['data'] = yaml.safe_load(foo)
 
@@ -62,9 +63,9 @@ if st.checkbox("Weekends"):
 else:
     st.session_state.data['weekend'] = ["Saturday", "Sunday"]
 
-st.header('Generate')
+st.sidebar.header('Generate')
 
-if st.checkbox("Preview YAML"):
-    st.write(st.session_state.data)
+st.sidebar.download_button("Download configuration file", yaml.dump(st.session_state.data), "config.yaml", "application/x-yaml")
 
-st.download_button("Download configuration file", yaml.dump(st.session_state.data), "config.yaml", "application/x-yaml")
+if st.sidebar.checkbox("Preview YAML"):
+    st.sidebar.write(st.session_state.data)
