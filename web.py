@@ -2,6 +2,7 @@
 
 import streamlit as st
 from ics import Calendar, Event
+from io import StringIO
 import yaml
 import datetime
 from calendar import monthrange
@@ -26,6 +27,21 @@ if inputFile is not None:
 else:
     st.text("Upload configuration file from sidebar")
     st.stop()
+
+# Holiday file
+if st.sidebar.checkbox("holiday config"):
+    inputFile = st.sidebar.file_uploader("Upload holiday config", type=['ics'])
+
+    if inputFile is not None:
+        c = Calendar(StringIO(inputFile.getvalue().decode("utf-8")).read())
+        holiday = True
+
+        e = list(c.timeline)
+        holidayDates = list()
+        for i in e:
+            holidayDates.append(str(i.begin).split("T")[0])
+else:
+    holiday = False
 
 # Creating a dictionary of classes from config.yaml
 dictofclass = {}
@@ -86,16 +102,8 @@ for dayCount in range(duration):
     # Checking if weekend
     while datetime.date(year=currentYear, month=currentMonth, day=currentDay).strftime("%A") in weekend:
         currentDay += 1
-
-        # Checking if next month
-        if currentDay > monthrange(currentDay, currentMonth)[1]:
-            currentDay = currentDay % monthrange(currentYear, currentMonth)[1]
-            currentMonth += 1
-
-        # Checking if next year
-        if currentMonth > 12:
-            currentMonth = currentMonth % 12
-            currentYear += 1
+        dayCount -= 1
+        continue
 
     day = list()
     currentCycle = (dayCount+cycle)%cyclecount
@@ -124,5 +132,5 @@ for i in range(len(week)):
         c.events.add(j)
 
 # Output file
-st.subheader("Download your file!")
-st.download_button("Download file", str(c), "timetables.ics", "text/Calendar")
+st.sidebar.subheader("Download your file!")
+st.sidebar.download_button("Download file", str(c), "timetables.ics", "text/Calendar")
