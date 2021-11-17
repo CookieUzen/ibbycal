@@ -8,4 +8,7 @@ classes:
     teacher: ''
 
 timetable:
-  - ["", "", "", ""]
+  - - ""
+    - ""
+    - ""
+    - ""
