@@ -39,7 +39,8 @@ if st.sidebar.checkbox("holiday config"):
         e = list(c.timeline)
         holidayDates = list()
         for i in e:
-            holidayDates.append(str(i.begin).split("T")[0])
+            holidayDates.append(i.begin.date())
+
 else:
     holiday = False
 
@@ -70,12 +71,6 @@ if st.checkbox("No day?"):
 else: 
     noDay = False
 
-year, month, date = str(date).split('-')
-
-year = int(year)
-month = int(month)
-date = int(date)
-
 # Begin is an arrow object
 classTimes = ["08:25:00", "10:00:00", "11:25:00", "14:05:00"]
 # May be set to anything that timedelta() understands/May be set with a dict
@@ -86,24 +81,14 @@ week = list()
 cyclecount = len(timetable)
 
 currentDay = date
-currentMonth = month
-currentYear = year
 for dayCount in range(duration):
-    # Checking if next month
-    if currentDay > monthrange(currentDay, currentMonth)[1]:
-        currentDay = currentDay % monthrange(currentYear, currentMonth)[1]
-        currentMonth += 1
-        
-    # Checking if next year
-    if currentMonth > 12:
-        currentMonth = currentMonth % 12
-        currentYear += 1
-
     # Checking if weekend
-    while datetime.date(year=currentYear, month=currentMonth, day=currentDay).strftime("%A") in weekend:
-        currentDay += 1
-        dayCount -= 1
-        continue
+    while currentDay.strftime("%A") in weekend:
+        currentDay += datetime.timedelta(days=1)
+
+    # Checking if holiday
+    while currentDay in holidayDates:
+        currentDay += datetime.timedelta(days=1)
 
     day = list()
     currentCycle = (dayCount+cycle)%cyclecount
@@ -113,17 +98,17 @@ for dayCount in range(duration):
             continue
 
         day.append(Event(name=dictofclass[timetable[currentCycle][j]].name,
-                         begin=f"{currentYear:04}-{currentMonth:02}-{currentDay:02} {classTimes[j]}+08:00",
+                         begin=f"{currentDay.year}-{currentDay.month:02}-{currentDay.day:02} {classTimes[j]}+08:00",
                          duration=classDuration,
                          location=dictofclass[timetable[currentCycle][j]].classroom))
 
     # Create all day event showing Day Number
     if noDay is not True:
-        foo = Event(name="Day "+str(currentCycle+1), begin=f"{currentYear:04}-{currentMonth:02}-{currentDay:02}")
+        foo = Event(name="Day "+str(currentCycle+1), begin=currentDay)
         foo.make_all_day()
         day.append(foo)
 
-    currentDay += 1
+    currentDay += datetime.timedelta(days=1)
     week.append(day)
 
 # Adding calendar objects for each day

@@ -11,9 +11,7 @@ Try the Web UI!
 ## TODO
 - [x] multiple weeks
 - [x] add config generation script
-- [ ] holiday avoider (read ics containing holidays)
+- [x] holiday avoider (read ics containing holidays)
 - [x] weekeday input/configuration
-- [ ] config location flag
 - [x] Web GUI
-- [ ] make into multi file, rewrite GUI/CLI
-- [ ] use datetime library
+- [x] use datetime library
