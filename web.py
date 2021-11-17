@@ -5,7 +5,7 @@ from ics import Calendar, Event
 from io import StringIO
 import yaml
 import datetime
-from calendar import monthrange
+import pytz
 
 
 class classes:
@@ -29,6 +29,7 @@ else:
     st.stop()
 
 # Holiday file
+holiday = False
 if st.sidebar.checkbox("holiday config"):
     inputFile = st.sidebar.file_uploader("Upload holiday config", type=['ics'])
 
@@ -40,9 +41,6 @@ if st.sidebar.checkbox("holiday config"):
         holidayDates = list()
         for i in e:
             holidayDates.append(i.begin.date())
-
-else:
-    holiday = False
 
 # Creating a dictionary of classes from config.yaml
 dictofclass = {}
@@ -72,7 +70,10 @@ else:
     noDay = False
 
 # Begin is an arrow object
-classTimes = ["08:25:00", "10:00:00", "11:25:00", "14:05:00"]
+classTimes = list()
+tz = pytz.timezone('Asia/Shanghai')
+for i in ["08:25:00", "10:00:00", "11:25:00", "14:05:00"]:
+    classTimes.append(datetime.datetime.strptime(i, '%H:%M:%S').time().replace(tzinfo=tz))
 # May be set to anything that timedelta() understands/May be set with a dict
 classDuration = {"hours": 1, "minutes": 20}
 
@@ -87,8 +88,9 @@ for dayCount in range(duration):
         currentDay += datetime.timedelta(days=1)
 
     # Checking if holiday
-    while currentDay in holidayDates:
-        currentDay += datetime.timedelta(days=1)
+    if holiday is True:
+        while currentDay in holidayDates:
+            currentDay += datetime.timedelta(days=1)
 
     day = list()
     currentCycle = (dayCount+cycle)%cyclecount
@@ -98,7 +100,7 @@ for dayCount in range(duration):
             continue
 
         day.append(Event(name=dictofclass[timetable[currentCycle][j]].name,
-                         begin=f"{currentDay.year}-{currentDay.month:02}-{currentDay.day:02} {classTimes[j]}+08:00",
+                         begin=datetime.datetime.combine(currentDay, classTimes[j]),
                          duration=classDuration,
                          location=dictofclass[timetable[currentCycle][j]].classroom))
 
@@ -117,5 +119,5 @@ for i in range(len(week)):
         c.events.add(j)
 
 # Output file
-st.sidebar.subheader("Download your file!")
-st.sidebar.download_button("Download file", str(c), "timetables.ics", "text/Calendar")
+st.subheader("Download your file!")
+st.download_button("Download file", str(c), "timetables.ics", "text/Calendar")

@@ -15,3 +15,6 @@ Try the Web UI!
 - [x] weekeday input/configuration
 - [x] Web GUI
 - [x] use datetime library
+- [ ] Add timezone configuration
+- [ ] Add classtime configuration
+- [ ] Add help tooltips
