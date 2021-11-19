@@ -25,7 +25,7 @@ inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'])
 if inputFile is not None:
     data = yaml.safe_load(inputFile)
 else:
-    st.text("Upload configuration file from sidebar")
+    st.warning("Upload configuration file from sidebar")
     st.stop()
 
 # Holiday file
@@ -47,6 +47,10 @@ dictofclass = {}
 for i in data['classes']:
     dictofclass.update({i['name']: classes(i['name'], i['classroom'], i['teacher'])})
 
+if len(dictofclass) <= 0:
+    st.error("Configuration file error: check classes")
+    st.stop()
+
 # Create an array for timetable
 timetable = list()
 for i in data['timetable']:
@@ -64,7 +68,7 @@ cycle = st.slider("Current Cycle", 1, len(timetable))
 cycle -= 1
 duration = st.number_input("How many days to generate to?", 1) 
 
-if st.checkbox("No day?"):
+if st.checkbox("No day"):
     noDay = True
 else: 
     noDay = False
@@ -74,12 +78,15 @@ classTimes = list()
 tz = pytz.timezone('Asia/Shanghai')
 for i in ["08:25:00", "10:00:00", "11:25:00", "14:05:00"]:
     classTimes.append(datetime.datetime.strptime(i, '%H:%M:%S').time().replace(tzinfo=tz))
-# May be set to anything that timedelta() understands/May be set with a dict
 classDuration = {"hours": 1, "minutes": 20}
 
 c = Calendar()
 week = list()
 cyclecount = len(timetable)
+
+if cyclecount <= 0:
+    st.error("Configuration file error: check timetable")
+    st.stop()
 
 currentDay = date
 for dayCount in range(duration):

@@ -10,16 +10,37 @@ inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'])
 
 # Enable option to update
 if inputFile is not None and st.sidebar.button("Import from file"):
-    st.session_state['data'] = yaml.safe_load(inputFile)
+    try:
+        st.session_state['data'] = yaml.safe_load(inputFile)
+
+    except yaml.YAMLError as exc:
+        if hasattr(exc, 'problem_mark'):
+            if exc.context != None:
+                st.error('  parser says\n' + str(exc.problem_mark) + '\n  ' +
+                    str(exc.problem) + ' ' + str(exc.context) +
+                    '\nPlease correct data and retry.')
+                st.stop()
+            else:
+                st.error('  parser says\n' + str(exc.problem_mark) + '\n  ' +
+                    str(exc.problem) + '\nPlease correct data and retry.')
+                st.stop()
+        else:
+            st.error("Something went wrong while parsing yaml file")
+            st.stop()
 
 if st.sidebar.button("Delete data") or 'data' not in st.session_state:
     with open('template.yaml') as foo:
         st.session_state['data'] = yaml.safe_load(foo)
 
+
 st.header('Add Classes')
 
-numClasses = len(st.session_state.data['classes'])
-numClasses = st.number_input("Number of Classes", max_value=100, min_value=1, value=numClasses)
+try:
+    numClasses = len(st.session_state.data['classes'])
+    numClasses = st.number_input("Number of Classes", max_value=100, min_value=1, value=numClasses)
+except KeyError:
+    st.error("Classes section in configuration file is broken.")
+    st.stop()
 
 if st.checkbox("Show Classes", value=True):
     with st.form(key="classes"):
@@ -44,12 +65,17 @@ listOfNames.append('Free')
 listOfNames.append('')
 
 st.header('Add Timetable')
-numCycle = len(st.session_state.data['timetable'])
-numCycle = st.number_input("Number of Days in timetable", min_value=1, max_value=100, value=numCycle)
+try:
+    numCycle = len(st.session_state.data['timetable'])
+    numCycle = st.number_input("Number of Days in timetable", min_value=1, max_value=100, value=numCycle)
+except KeyError:
+    st.error("Timetable section in configuration file is broken.")
+    st.stop()
 
-if st.checkbox("Show timetables", value=True):
+if st.checkbox("Show timetables"):
     with st.form(key="timetable"):
 
+        error = False
         actualNumCycle = len(st.session_state.data['timetable'])
 
         if numCycle > actualNumCycle:
@@ -61,12 +87,19 @@ if st.checkbox("Show timetables", value=True):
 
         for i in range(numCycle):
             st.session_state.data['timetable'][i] = st.multiselect(f"Timetable for day {i+1}", default=st.session_state.data['timetable'][i], options=listOfNames, key=i)
+            if len(st.session_state.data['timetable'][i]) > 4:
+                st.warning('Maximum 4 classes per day')
+                error = True
 
-        st.form_submit_button("Save classes")
+        if error is not True:
+            st.form_submit_button("Save classes")
 
 st.header('Additional Configurations')
 if st.checkbox("Weekends"):
-    st.session_state.data['weekend'] = st.multiselect("Choose weekend", default=st.session_state.data['weekend'], options=("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+    try:
+        st.session_state.data['weekend'] = st.multiselect("Choose weekend", default=st.session_state.data['weekend'], options=("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+    except KeyError:
+        st.session_state.data['weekend'] = ["Saturday", "Sunday"]
 else:
     st.session_state.data['weekend'] = ["Saturday", "Sunday"]
 
