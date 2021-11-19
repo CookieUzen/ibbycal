@@ -60,7 +60,12 @@ if st.checkbox("Show Classes", help="Show and Edit classes"):
 
         st.form_submit_button("Save classes")
 
-listOfNames = [i["name"] for i in st.session_state.data['classes']]
+try:
+    listOfNames = [i["name"] for i in st.session_state.data['classes']]
+except KeyError:
+    st.error("Classes section in configuration file is broken")
+    st.stop()
+
 listOfNames.append('Free')
 listOfNames.append('')
 

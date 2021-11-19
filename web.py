@@ -23,7 +23,23 @@ st.sidebar.subheader('Configuration')
 inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'], help="Upload your generated configuration file here")
 
 if inputFile is not None:
-    data = yaml.safe_load(inputFile)
+    try:
+        data = yaml.safe_load(inputFile)
+
+    except yaml.YAMLError as exc:
+        if hasattr(exc, 'problem_mark'):
+            if exc.context != None:
+                st.error('  parser says\n' + str(exc.problem_mark) + '\n  ' +
+                    str(exc.problem) + ' ' + str(exc.context) +
+                    '\nPlease correct data and retry.')
+                st.stop()
+            else:
+                st.error('  parser says\n' + str(exc.problem_mark) + '\n  ' +
+                    str(exc.problem) + '\nPlease correct data and retry.')
+                st.stop()
+        else:
+            st.error("Something went wrong while parsing yaml file")
+            st.stop()
 else:
     st.warning("Upload configuration file from sidebar")
     st.stop()
@@ -44,8 +60,12 @@ if st.sidebar.checkbox("holiday config", help="Upload an ics containing holiday 
 
 # Creating a dictionary of classes from config.yaml
 dictofclass = {}
-for i in data['classes']:
-    dictofclass.update({i['name']: classes(i['name'], i['classroom'], i['teacher'])})
+try:
+    for i in data['classes']:
+        dictofclass.update({i['name']: classes(i['name'], i['classroom'], i['teacher'])})
+except KeyError:
+    st.error("Classes section in configuration is broken")
+    st.stop()
 
 if len(dictofclass) <= 0:
     st.error("Configuration file error: check classes")
