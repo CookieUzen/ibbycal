@@ -6,7 +6,7 @@ import yaml
 st.sidebar.title('Config Generator')
 
 # Uploading and parsing config
-inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'])
+inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'],help="Select your config.yaml or config.yml file to load data")
 
 # Enable option to update
 if inputFile is not None and st.sidebar.button("Import from file"):
@@ -28,7 +28,7 @@ if inputFile is not None and st.sidebar.button("Import from file"):
             st.error("Something went wrong while parsing yaml file")
             st.stop()
 
-if st.sidebar.button("Delete data") or 'data' not in st.session_state:
+if st.sidebar.button("Delete data",help="Remove all input data or and cancel uploaded files") or 'data' not in st.session_state:
     with open('template.yaml') as foo:
         st.session_state['data'] = yaml.safe_load(foo)
 
@@ -105,7 +105,7 @@ else:
 
 st.sidebar.header('Generate')
 
-st.sidebar.download_button("Download configuration file", yaml.dump(st.session_state.data), "config.yaml", "application/x-yaml")
+st.sidebar.download_button("Download configuration file", yaml.dump(st.session_state.data), "config.yaml", "application/x-yaml", help="Generate your config.yml or config.yaml file")
 
 if st.sidebar.checkbox("Preview YAML"):
     st.sidebar.write(st.session_state.data)
