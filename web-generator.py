@@ -6,7 +6,7 @@ import yaml
 st.sidebar.title('Config Generator')
 
 # Uploading and parsing config
-inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'],help="Select your config.yaml or config.yml file to load data")
+inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'], help="Select your config.yaml or config.yml file to load data")
 
 # Enable option to update
 if inputFile is not None and st.sidebar.button("Import from file"):
@@ -28,7 +28,7 @@ if inputFile is not None and st.sidebar.button("Import from file"):
             st.error("Something went wrong while parsing yaml file")
             st.stop()
 
-if st.sidebar.button("Delete data",help="Remove all input data or and cancel uploaded files") or 'data' not in st.session_state:
+if st.sidebar.button("Delete data", help="Remove all input data or and cancel uploaded files") or 'data' not in st.session_state:
     with open('template.yaml') as foo:
         st.session_state['data'] = yaml.safe_load(foo)
 
@@ -37,12 +37,12 @@ st.header('Add Classes')
 
 try:
     numClasses = len(st.session_state.data['classes'])
-    numClasses = st.number_input("Number of Classes", max_value=100, min_value=1, value=numClasses)
+    numClasses = st.number_input("Number of Classes", max_value=100, min_value=1, value=numClasses, help="How many different classes do you have?")
 except KeyError:
     st.error("Classes section in configuration file is broken.")
     st.stop()
 
-if st.checkbox("Show Classes", value=True):
+if st.checkbox("Show Classes", help="Show and Edit classes"):
     with st.form(key="classes"):
         if numClasses > len(st.session_state.data['classes']):
             for i in range(numClasses - len(st.session_state.data['classes'])):
@@ -67,12 +67,12 @@ listOfNames.append('')
 st.header('Add Timetable')
 try:
     numCycle = len(st.session_state.data['timetable'])
-    numCycle = st.number_input("Number of Days in timetable", min_value=1, max_value=100, value=numCycle)
+    numCycle = st.number_input("Number of Days in timetable", min_value=1, max_value=100, value=numCycle, help="How many days are in your timetable?")
 except KeyError:
     st.error("Timetable section in configuration file is broken.")
     st.stop()
 
-if st.checkbox("Show timetables"):
+if st.checkbox("Show timetables", help="Show and Edit timetable settings"):
     with st.form(key="timetable"):
 
         error = False
@@ -95,7 +95,7 @@ if st.checkbox("Show timetables"):
             st.form_submit_button("Save classes")
 
 st.header('Additional Configurations')
-if st.checkbox("Weekends"):
+if st.checkbox("Show weekends", help="Show and Edit weekends"):
     try:
         st.session_state.data['weekend'] = st.multiselect("Choose weekend", default=st.session_state.data['weekend'], options=("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
     except KeyError:

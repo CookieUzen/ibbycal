@@ -20,7 +20,7 @@ st.title('Ibbycal')
 st.sidebar.subheader('Configuration')
 
 # Uploading and parsing config
-inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'])
+inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'], help="Upload your generated configuration file here")
 
 if inputFile is not None:
     data = yaml.safe_load(inputFile)
@@ -30,7 +30,7 @@ else:
 
 # Holiday file
 holiday = False
-if st.sidebar.checkbox("holiday config"):
+if st.sidebar.checkbox("holiday config", help="Upload an ics containing holiday events"):
     inputFile = st.sidebar.file_uploader("Upload holiday config", type=['ics'])
 
     if inputFile is not None:
@@ -53,27 +53,33 @@ if len(dictofclass) <= 0:
 
 # Create an array for timetable
 timetable = list()
-for i in data['timetable']:
-    timetable.append(i)
+
+try:
+    for i in data['timetable']:
+        timetable.append(i)
+except KeyError:
+    st.error("Timetable section in configuration is broken")
+    st.stop()
 
 # Create an array for weekend
 weekend = list()
-for i in data['weekend']:
-    weekend.append(i)
+try:
+    for i in data['weekend']:
+        weekend.append(i)
+except KeyError:
+    st.error("Weekend section in configuration is broken")
+    st.stop()
 
-st.subheader("Generate")
-
-date = st.date_input("Current Day")
-cycle = st.slider("Current Cycle", 1, len(timetable))
+date = st.date_input("Current Day", help="Enter the day you want to start generating timetables for")
+cycle = st.slider("Current Cycle", 1, len(timetable), help="Enter the cycle of the day selected")
 cycle -= 1
-duration = st.number_input("How many days to generate to?", 1) 
+duration = st.number_input("How many days generate?", 1)
 
-if st.checkbox("No day"):
+if st.checkbox("No day", help="If enabled, the calendar will not generate all day events showing the cycle"):
     noDay = True
 else: 
     noDay = False
 
-# Begin is an arrow object
 classTimes = list()
 tz = pytz.timezone('Asia/Shanghai')
 for i in ["08:25:00", "10:00:00", "11:25:00", "14:05:00"]:
@@ -127,4 +133,4 @@ for i in range(len(week)):
 
 # Output file
 st.subheader("Download your file!")
-st.download_button("Download file", str(c), "timetables.ics", "text/Calendar")
+st.download_button("Generate!", str(c), "timetables.ics", "text/Calendar")
