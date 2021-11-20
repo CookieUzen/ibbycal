@@ -20,7 +20,12 @@ st.title('Ibbycal')
 st.sidebar.subheader('Configuration')
 
 # Uploading and parsing config
-inputFile = st.sidebar.file_uploader("Upload yaml config", type=['yaml', 'yml'], help="Upload your generated configuration file here")
+inputFile = st.sidebar.file_uploader(
+    "Upload yaml config",
+    type=[
+        'yaml',
+        'yml'],
+    help="Upload your generated configuration file here")
 
 if inputFile is not None:
     try:
@@ -28,14 +33,14 @@ if inputFile is not None:
 
     except yaml.YAMLError as exc:
         if hasattr(exc, 'problem_mark'):
-            if exc.context != None:
+            if exc.context is not None:
                 st.error('  parser says\n' + str(exc.problem_mark) + '\n  ' +
-                    str(exc.problem) + ' ' + str(exc.context) +
-                    '\nPlease correct data and retry.')
+                         str(exc.problem) + ' ' + str(exc.context) +
+                         '\nPlease correct data and retry.')
                 st.stop()
             else:
                 st.error('  parser says\n' + str(exc.problem_mark) + '\n  ' +
-                    str(exc.problem) + '\nPlease correct data and retry.')
+                         str(exc.problem) + '\nPlease correct data and retry.')
                 st.stop()
         else:
             st.error("Something went wrong while parsing yaml file")
@@ -46,7 +51,8 @@ else:
 
 # Holiday file
 holiday = False
-if st.sidebar.checkbox("holiday config", help="Upload an ics containing holiday events"):
+if st.sidebar.checkbox("holiday config",
+                       help="Upload an ics containing holiday events"):
     inputFile = st.sidebar.file_uploader("Upload holiday config", type=['ics'])
 
     if inputFile is not None:
@@ -62,7 +68,8 @@ if st.sidebar.checkbox("holiday config", help="Upload an ics containing holiday 
 dictofclass = {}
 try:
     for i in data['classes']:
-        dictofclass.update({i['name']: classes(i['name'], i['classroom'], i['teacher'])})
+        dictofclass.update(
+            {i['name']: classes(i['name'], i['classroom'], i['teacher'])})
 except KeyError:
     st.error("Classes section in configuration is broken")
     st.stop()
@@ -90,20 +97,27 @@ except KeyError:
     st.error("Weekend section in configuration is broken")
     st.stop()
 
-date = st.date_input("Current Day", help="Enter the day you want to start generating timetables for")
-cycle = st.slider("Current Cycle", 1, len(timetable), help="Enter the cycle of the day selected")
+date = st.date_input(
+    "Current Day",
+    help="Enter the day you want to start generating timetables for")
+cycle = st.slider("Current Cycle", 1, len(timetable),
+                  help="Enter the cycle of the day selected")
 cycle -= 1
 duration = st.number_input("How many days generate?", 1)
 
-if st.checkbox("No day", help="If enabled, the calendar will not generate all day events showing the cycle"):
+if st.checkbox(
+        "No day", help="If enabled, the calendar will not generate all day events showing the cycle"):
     noDay = True
-else: 
+else:
     noDay = False
 
 classTimes = list()
 tz = pytz.timezone('Asia/Shanghai')
 for i in ["08:25:00", "10:00:00", "11:25:00", "14:05:00"]:
-    classTimes.append(datetime.datetime.strptime(i, '%H:%M:%S').time().replace(tzinfo=tz))
+    classTimes.append(
+        datetime.datetime.strptime(
+            i, '%H:%M:%S').time().replace(
+            tzinfo=tz))
 classDuration = {"hours": 1, "minutes": 20}
 
 c = Calendar()
@@ -126,20 +140,21 @@ for dayCount in range(duration):
             currentDay += datetime.timedelta(days=1)
 
     day = list()
-    currentCycle = (dayCount+cycle)%cyclecount
+    currentCycle = (dayCount + cycle) % cyclecount
     for j in range(len(timetable[currentCycle])):
         # skip class if free session
         if timetable[currentCycle][j] in ("free", "Free"):
             continue
 
         day.append(Event(name=dictofclass[timetable[currentCycle][j]].name,
-                         begin=datetime.datetime.combine(currentDay, classTimes[j]),
+                         begin=datetime.datetime.combine(
+                             currentDay, classTimes[j]),
                          duration=classDuration,
                          location=dictofclass[timetable[currentCycle][j]].classroom))
 
     # Create all day event showing Day Number
     if noDay is not True:
-        foo = Event(name="Day "+str(currentCycle+1), begin=currentDay)
+        foo = Event(name="Day " + str(currentCycle + 1), begin=currentDay)
         foo.make_all_day()
         day.append(foo)
 
