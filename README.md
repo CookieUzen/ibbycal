@@ -17,4 +17,4 @@ Try the Web UI!
 - [x] use datetime library
 - [ ] Add timezone configuration
 - [ ] Add classtime configuration
-- [ ] Add help tooltips
+- [x] Add help tooltips
