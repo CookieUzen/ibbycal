@@ -4,7 +4,7 @@ _An IB compatible, 8 (modifiable) day cycle calendar written in python._
 
 Try the Web UI!
 - Run the config generator to get the config file, then upload the config file to the timetable generator
-- Download the [SWIS Template file](swis-template.yaml) to experiment
+- Download the [SWIS Template file](https://raw.githubusercontent.com/CookieUzen/ibbycal/master/swis-template.yaml) to experiment
 - [Config Generator](https://share.streamlit.io/cookieuzen/ibbycal/web-generator.py)
 - [Timetable Generator](https://share.streamlit.io/cookieuzen/ibbycal/web.py)
 
